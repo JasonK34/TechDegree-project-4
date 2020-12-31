@@ -21,4 +21,5 @@ class Product(Model):
         
 if __name__ == "__main__":
     db.connect()
+    db.create_tables([Product], safe=True)
     
