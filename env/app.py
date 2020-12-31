@@ -27,3 +27,4 @@ with open('inventory.csv', newline= '') as csvfile:
 if __name__ == "__main__":
     db.connect()
     db.create_tables([Product], safe=True)
+    
