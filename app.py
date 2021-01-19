@@ -37,7 +37,7 @@ def inventory():
             row['product_quantity'] = int(row['product_quantity'])
             row['product_price'] = int(float(row['product_price'].replace("$", ""))) * 100
             row['date_updated'] = datetime.datetime.strptime(row['date_updated'], "%m/%d/%Y")
-            print(row)
+            
 
 def menu_loop():
     choice = None
