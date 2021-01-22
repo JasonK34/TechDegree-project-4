@@ -38,11 +38,18 @@ def inventory():
             row['product_price'] = int(float(row['product_price'].replace("$", ""))) * 100
             row['date_updated'] = datetime.datetime.strptime(row['date_updated'], "%m/%d/%Y")
 
-        for row in rows:
-            Product.create(product_name=row['product_name'],
-                           product_quantity=row['product_quantity'],
-                           product_price=row['product_price'],
-                           date_updated=row['date_updated'])
+            try:
+                Product.create(product_name=row['product_name'],
+                               product_quantity=row['product_quantity'],
+                               product_price=row['product_price'],
+                               date_updated=row['date_updated'])
+            except IntegrityError:
+                item_record = Product.get(product_name=row['product_name'])
+                item_record.quantity = row['product_quantity']
+                item_record.price = row['product_price']
+                item_record.date = row['date_updated']
+                item_record.save()
+
 
 def menu_loop():
     choice = None
@@ -73,20 +80,20 @@ def add_product():
     # add a product to the database; prompt user to enter the product's name, quantity, and price
     # process the entered price from a string to an integer (convert to cents)
     """Add Product to Inventory"""
-    add_item = input("Enter item name. Press 'ctrl+d' when finished.\n")
-    if add_item:
-        add_item = sys.stdin.read().strip()
-        with open("inventory.csv", "a") as shopping_list:
-            save_item = input("Save item? [Yn] ")
-            if save_item != 'n':
-                try:
-                    Product.create(add_item = Product.product_name)
-                except IntegrityError:
-                    item_record = Product.get(product_name = Product.product_name)
-                    item_record.name = (add_item = Product.product_name)
-                    item_record.save()
-                print( "Item Saved!" )
-            shopping_list.close()
+    #add_item = input("Enter item name. Press 'ctrl+d' when finished.\n")
+    #if add_item:
+        #add_item = sys.stdin.read().strip()
+        #with open("inventory.csv", "a") as shopping_list:
+            #save_item = input("Save item? [Yn] ")
+            #if save_item != 'n':
+                #try:
+                    #Product.create(add_item = Product.product_name)
+                #except IntegrityError:
+                    #item_record = Product.get(product_name = Product.product_name)
+                    #item_record.name = (add_item = Product.product_name)
+                    #item_record.save()
+                #print( "Item Saved!" )
+            #shopping_list.close()
 
 def backup():
     #makes back_up of the database and writes it to a .csv file
