@@ -81,20 +81,42 @@ def add_product():
     # add a product to the database; prompt user to enter the product's name, quantity, and price
     # process the entered price from a string to an integer (convert to cents)
     """Add Product to Inventory"""
-    #add_item = input("Enter item name. Press 'ctrl+d' when finished.\n")
-    #if add_item:
-        #add_item = sys.stdin.read().strip()
-        #with open("inventory.csv", "a") as shopping_list:
-            #save_item = input("Save item? [Yn] ")
-            #if save_item != 'n':
-                #try:
-                    #Product.create(add_item = Product.product_name)
-                #except IntegrityError:
-                    #item_record = Product.get(product_name = Product.product_name)
-                    #item_record.name = (add_item = Product.product_name)
-                    #item_record.save()
-                #print( "Item Saved!" )
-            #shopping_list.close()
+    add_item = input("Enter item name. Press 'ctrl+d' when finished.\n")
+    if add_item:
+        try:
+            add_item = sys.stdin.read().strip()
+        except ValueError:
+            print("Entry not valid")
+
+    add_price = input("Enter product price: ")
+    if add_price:
+        try:
+            add_price = int(float(add_price.replace("$", " ").strip())) * 100
+        except ValueError:
+            print("Price not valid")
+
+    add_quantity = input("Enter quantity available: ")
+    if add_quantity:
+        try:
+            add_quantity = int(add_quantity)
+        except ValueError:
+            print("Quantity not valid")
+
+
+    with open('inventory.csv', "a") as shopping_list:
+        save_item = input("Save item? [Yn] ")
+        if save_item != 'n':
+            try:
+                Product.create(add_item = Product.product_name)
+            except IntegrityError:
+                item_record = Product.get(product_name = Product.product_name)
+                item_record.name = Product.product_name
+                item_record.price = Product.product_price
+                item_record.quantity = Product.product_quantity
+                item_record.save()
+        print( "Item Saved!" )
+        shopping_list.close()
+
 
 def backup():
     #makes back_up of the database and writes it to a .csv file
