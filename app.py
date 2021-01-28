@@ -45,10 +45,10 @@ def inventory():
                                date_updated=row['date_updated'])
             except IntegrityError:
                 item_record = Product.get(product_name=row['product_name'])
-                item_record.name = row['product_name']
-                item_record.quantity = row['product_quantity']
-                item_record.price = row['product_price']
-                item_record.date = row['date_updated']
+                item_record.product_name = row['product_name']
+                item_record.product_quantity = row['product_quantity']
+                item_record.product_price = row['product_price']
+                item_record.date_updated = row['date_updated']
                 item_record.save()
 
 
