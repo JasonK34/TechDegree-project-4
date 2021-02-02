@@ -56,7 +56,7 @@ def menu_loop():
     choice = None
 
     while choice != 'q':
-        clear()
+        #clear()
         print("Enter 'q' to quit")
         for key, value in menu.items():
             print('{}) {}'.format(key, value.__doc__))
@@ -67,14 +67,28 @@ def menu_loop():
             menu[choice]()
 
 
-def view_product():
+def view_product(search_query):
     #get and display a product by its product_id
+
+    products = Product.select().order_by(Product.product_price.desc())
+    if search_query:
+        products = products.where(Product.product_name.contains(search_query))
+
+    for product in products:
+        print(product.product_name + " >>>",
+              "Quantity: ", product.product_quantity,
+              " ---",
+              "Price: ", product.product_price)
+        print("-"*30)
+    print("*"*30 + "\n")
+
+    if search_query not in products:
+        print("\nNot available\n")
+
+
+def search_products():
     """View Product from Inventory"""
-    #user_choice = input( 'Name of product: ' )
-    #show_product = Product.select().where(Product.product_name=user_choice)
-    #for product in show_product:
-        #clear()
-        #print(show_product)
+    view_product(input("What item are you searching for: "))
 
 
 def add_product():
@@ -103,7 +117,7 @@ def backup():
     """Backup Inventory"""
 
 menu = OrderedDict([
-    ('v', view_product),
+    ('v', search_products),
     ('a', add_product),
     ('b', backup),
 ])
