@@ -51,28 +51,34 @@ def inventory():
                 item_record.date_updated = row['date_updated']
                 item_record.save()
 
-
 def menu_loop():
     choice = None
 
     while choice != 'q':
         #clear()
-        print("Enter 'q' to quit")
+        print("\n>>>> MENU OPTIONS <<<<\n")
+        print("Enter 'q' to quit\n")
         for key, value in menu.items():
             print('{}) {}'.format(key, value.__doc__))
+        print("\n")
         choice = input('Enter choice: ').lower().strip()
 
         if choice in menu:
             clear()
             menu[choice]()
 
-
-def view_product(search_query):
+def view_product():
     #get and display a product by its product_id
+    """View Product from Inventory"""
+    clear()
+    search_query = input( "What item are you searching for: " )
 
     products = Product.select().order_by(Product.product_price.desc())
     if search_query:
         products = products.where(Product.product_name.contains(search_query))
+    else:
+        if search_query not in shopping_list:
+            print( "\nNot available\n" )
 
     for product in products:
         print(product.product_name + " >>>",
@@ -81,15 +87,6 @@ def view_product(search_query):
               "Price: ", product.product_price)
         print("-"*30)
     print("*"*30 + "\n")
-
-    if search_query not in products:
-        print("\nNot available\n")
-
-
-def search_products():
-    """View Product from Inventory"""
-    view_product(input("What item are you searching for: "))
-
 
 def add_product():
     # add a product to the database; prompt user to enter the product's name, quantity, and price
@@ -116,8 +113,9 @@ def backup():
     #makes back_up of the database and writes it to a .csv file
     """Backup Inventory"""
 
+
 menu = OrderedDict([
-    ('v', search_products),
+    ('v', view_product),
     ('a', add_product),
     ('b', backup),
 ])
